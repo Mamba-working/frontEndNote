@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="js/jquery.js"></script>
+    <style>
+        .lauyout {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .layout img {
+            position: absolute;
+            width: 100px;
+            transition: all 0.6s;
+            margin: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="layout">
+        <img src="http://via.placeholder.com/100x100" alt="300*100">
+        <img src="http://via.placeholder.com/100x70" alt="300*70">
+        <img src="http://via.placeholder.com/100x150" alt="300*150">
+        <img src="http://via.placeholder.com/100x250" alt="300*250">
+        <img src="http://via.placeholder.com/100x80" alt="300*80">
+        <img src="http://via.placeholder.com/100x90" alt="300*90">
+        <img src="http://via.placeholder.com/100x120" alt="300*120">
+        <img src="http://via.placeholder.com/100x210" alt="300*210">
+        <img src="http://via.placeholder.com/100x230" alt="300*230">
+        <img src="http://via.placeholder.com/100x100" alt="300*100">
+        <img src="http://via.placeholder.com/100x70" alt="300*70">
+        <img src="http://via.placeholder.com/100x150" alt="300*150">
+        <img src="http://via.placeholder.com/100x250" alt="300*250">
+        <img src="http://via.placeholder.com/100x80" alt="300*80">
+        <img src="http://via.placeholder.com/100x90" alt="300*90">
+        <img src="http://via.placeholder.com/100x120" alt="300*120">
+        <img src="http://via.placeholder.com/100x210" alt="300*210">
+        <img src="http://via.placeholder.com/100x230" alt="300*230">
+    </div>
+    <script>
+        let app = {
+            init() {
+                this.imgWidth = $(".layout img").outerWidth(true)
+                this.coluCount = Math.floor($(".layout").width() / this.imgWidth)
+                this.coluArr = []
+                for (let i = 0; i < this.coluCount; i++) {
+                    this.coluArr.push(0)
+                }
+                this.bind();
+
+            },
+            bind: function () {
+                let _this = this;
+                $(".layout img").on("load", function () {
+                    _this.layout($(this))
+                })
+
+                $(window).on("resize", function () {
+                    let timer = null;
+                    clearTimeout(timer);
+                    setTimeout(function(){
+                    _this.coluCount = Math.floor($(".layout").width() / _this.imgWidth)
+                    _this.coluArr = []
+                    for (let i = 0; i < _this.coluCount; i++) {
+                        _this.coluArr.push(0)
+                    }
+                    $(".layout img").each(function () {
+                        _this.layout($(this))
+                    })
+                    },500)
+                    
+                })
+            },
+            layout: function ($node) {
+                let minIndex = this.min(this.coluArr);
+                let minValue = this.coluArr[minIndex];
+                $node.css({
+                    top: minValue,
+                    left: minIndex * this.imgWidth
+                })
+                this.coluArr[minIndex] += $node.outerHeight(true)
+            },
+            min: function (arr) {
+                let minValue = arr[0];
+                let minIndex = 0;
+                for (let i = 0; i < arr.length; i++) {
+                    if (arr[i] < minValue) {
+                        minValue = arr[i];
+                        minIndex = i;
+                    }
+                }
+                return minIndex
+            }
+        }
+        app.init()
+    </script>
+</body>
+
+</html>
